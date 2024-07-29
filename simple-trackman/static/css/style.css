@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+#camera-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    margin: 20px auto;
+}
+
+#video, #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#result-container {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+#start-btn {
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+#status-message {
+    margin-top: 20px;
+    color: #666;
+}

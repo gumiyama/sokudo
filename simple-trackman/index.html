@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易トラックマン</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>簡易トラックマン</h1>
+    <div id="camera-container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+    <button id="start-btn" disabled>計測開始</button>
+    <div id="result-container">
+        <p>球速: <span id="speed">0</span> km/h</p>
+    </div>
+    <div id="status-message"></div>
+    <script src="script.js"></script>
+</body>
+</html>
