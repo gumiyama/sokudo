@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   const startBtn = document.getElementById('start-btn');
-  const clearBtn = document.getElementById('clear-btn');
   const speedDisplay = document.getElementById('speed');
   const statusMessage = document.getElementById('status-message');
   const body = document.body;
@@ -16,27 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastSpeedUpdateTime = null;
   let startTime = null;
   const MEASURE_DELAY = 1000; // 1秒間の遅延
-  const SPEED_HOLD_TIME = 10000; // 10秒間速度を表示
-  const SPEED_UPDATE_INTERVAL = 500; // 0.5秒ごとに速度を更新
+  const SPEED_HOLD_TIME = 5000; // 5秒間速度を表示
+  const SPEED_UPDATE_INTERVAL = 5000; // 0.5秒ごとに速度を更新
   const CAMERA_ANGLE = 45; // カメラの斜め角度（度数法）
-
-  let currentCamera = 'user'; // user: フロントカメラ、environment: バックカメラ
-
-  // カメラを切り替える関数
-  async function switchCamera() {
-    currentCamera = currentCamera === 'user' ? 'environment' : 'user';
-    await setupCamera();
-  }
+  const MIN_DISTANCE = 10; // 最小距離ピクセル単位
 
   // カメラの設定
   async function setupCamera() {
     try {
       console.log("Requesting camera access");
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: currentCamera
-        }
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       video.srcObject = stream;
       console.log("Stream obtained: ", stream);
       video.addEventListener('loadeddata', () => {
@@ -47,17 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error("カメラの起動に失敗しました:", err);
       statusMessage.textContent = `カメラの起動に失敗しました: ${err.message}`;
-      startBtn.disabled = true;
     }
   }
 
   setupCamera();
-
-  // カメラ切り替えボタンの追加
-  const switchCameraBtn = document.createElement('button');
-  switchCameraBtn.textContent = 'カメラ切り替え';
-  switchCameraBtn.addEventListener('click', switchCamera);
-  body.appendChild(switchCameraBtn);
 
   // ボールの検出（簡易版）
   function detectBall(imageData) {
@@ -88,17 +69,26 @@ document.addEventListener('DOMContentLoaded', () => {
       // 斜め角度の補正
       const speedKmPerHour = speedPixelsPerSecond * 0.1 / Math.cos(CAMERA_ANGLE * Math.PI / 180);
       console.log(`Calculated speed: ${speedKmPerHour.toFixed(2)} km/h`);
-      
-      if (!lastSpeedUpdateTime || (currentTime - lastSpeedUpdateTime) >= SPEED_UPDATE_INTERVAL) {
-        lastSpeed = speedKmPerHour.toFixed(2);
-        speedDisplay.textContent = lastSpeed;
-        lastSpeedUpdateTime = currentTime;
-        
-        clearTimeout(speedHoldTimeout);
-        speedHoldTimeout = setTimeout(() => {
-          speedDisplay.textContent = "0";
-        }, SPEED_HOLD_TIME);
+
+      // 前回の速度と比較し、急激な変化がないか確認
+      if (lastSpeed !== null && Math.abs(speedKmPerHour - lastSpeed) > 100) {
+        console.log("Unrealistic speed change detected, ignoring this value");
+        return;
       }
+
+      if (distance < MIN_DISTANCE) {
+        console.log("Movement distance too small, ignoring this value");
+        return;
+      }
+
+      lastSpeed = speedKmPerHour.toFixed(2);
+      speedDisplay.textContent = lastSpeed;
+      lastSpeedUpdateTime = currentTime;
+
+      clearTimeout(speedHoldTimeout);
+      speedHoldTimeout = setTimeout(() => {
+        speedDisplay.textContent = "0";
+      }, SPEED_HOLD_TIME);
     }
   }
 
@@ -107,22 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      
+
       if (measuring) {
         const ballPosition = detectBall(imageData);
         const currentTime = new Date().getTime();
         calculateAndDisplaySpeed(ballPosition, currentTime);
-        
+
         lastBallPosition = ballPosition;
         lastBallTime = currentTime;
-        
+
         ctx.beginPath();
         ctx.arc(ballPosition.x, ballPosition.y, 5, 0, 2 * Math.PI);
         ctx.fillStyle = 'red';
         ctx.fill();
       }
     }
-    
+
     requestAnimationFrame(processFrame);
   }
 
@@ -143,11 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(speedHoldTimeout);
       speedDisplay.textContent = "0";
     }
-  });
-
-  clearBtn.addEventListener('click', () => {
-    speedDisplay.textContent = '0';
-    clearTimeout(speedHoldTimeout);
   });
 
   video.addEventListener('loadedmetadata', () => {
