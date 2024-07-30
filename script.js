@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   const startBtn = document.getElementById('start-btn');
+  const clearBtn = document.getElementById('clear-btn');
   const speedDisplay = document.getElementById('speed');
   const statusMessage = document.getElementById('status-message');
   const body = document.body;
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastSpeedUpdateTime = null;
   let startTime = null;
   const MEASURE_DELAY = 1000; // 1秒間の遅延
-  const SPEED_HOLD_TIME = 5000; // 5秒間速度を表示
+  const SPEED_HOLD_TIME = 10000; // 10秒間速度を表示
   const SPEED_UPDATE_INTERVAL = 500; // 0.5秒ごとに速度を更新
   const CAMERA_ANGLE = 45; // カメラの斜め角度（度数法）
 
@@ -142,6 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(speedHoldTimeout);
       speedDisplay.textContent = "0";
     }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    speedDisplay.textContent = '0';
+    clearTimeout(speedHoldTimeout);
   });
 
   video.addEventListener('loadedmetadata', () => {

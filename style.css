@@ -1,25 +1,23 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     margin: 0;
-    box-sizing: border-box;
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
 }
 
 #camera-container {
     position: relative;
     width: 100%;
     max-width: 640px;
-    margin: 10px auto;
+    margin: 20px auto;
     overflow: hidden;
 }
 
-#video, #canvas {
+#video {
+    display: none;
+}
+
+#canvas {
     width: 100%;
     height: auto;
     display: block;
@@ -30,47 +28,17 @@ h1 {
 }
 
 #result-container {
-    font-size: 20px;
-    margin: 10px 0;
+    font-size: 24px;
+    margin: 20px 0;
 }
 
-#start-btn {
-    font-size: 16px;
+#start-btn, #clear-btn {
+    font-size: 18px;
     padding: 10px 20px;
     display: inline-block;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#start-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
 }
 
 #status-message {
-    margin-top: 10px;
+    margin-top: 20px;
     color: #666;
-    font-size: 14px;
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 5px;
-    }
-
-    h1 {
-        font-size: 20px;
-    }
-
-    #start-btn {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    #result-container {
-        font-size: 18px;
-    }
 }
