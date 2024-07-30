@@ -19,6 +19,10 @@ body {
     display: block;
 }
 
+#controls {
+    margin: 10px 0;
+}
+
 #result-container {
     font-size: 24px;
     margin: 20px 0;
@@ -27,7 +31,6 @@ body {
 #start-btn {
     font-size: 18px;
     padding: 10px 20px;
-    margin-top: 10px;
     display: inline-block;
 }
 
