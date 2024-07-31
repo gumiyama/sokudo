@@ -66,6 +66,10 @@ def calculate_speed(positions, times):
     return speed_mps * 3.6
 
 def process_frame(frame):
+    # 画像の前処理
+    frame = cv2.GaussianBlur(frame, (5, 5), 0)
+    frame = cv2.convertScaleAbs(frame, alpha=1.5, beta=0)
+    
     ball_position = detect_ball(frame)
     if ball_position:
         kf.predict()
