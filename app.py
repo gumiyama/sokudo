@@ -7,8 +7,8 @@ from filterpy.kalman import KalmanFilter
 app = Flask(__name__)
 
 # ボール検出のための設定
-lower_color = np.array([0, 0, 100])
-upper_color = np.array([180, 30, 255])
+lower_color = np.array([0, 50, 100])
+upper_color = np.array([180, 150, 255])
 
 # 野球場の寸法（メートル）
 PITCHER_PLATE_TO_HOME = 18.44
@@ -24,8 +24,8 @@ kf.F = np.array([[1, 0, 1, 0],
                  [0, 0, 0, 1]])
 kf.H = np.array([[1, 0, 0, 0],
                  [0, 1, 0, 0]])
-kf.R *= 10
-kf.Q = np.eye(4) * 0.1
+kf.R *= 5
+kf.Q = np.eye(4) * 0.05
 
 ball_positions = []
 ball_times = []
