@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // カメラ切り替えボタンのイベントリスナー
     switchCameraBtn.addEventListener('click', switchCamera);
 
-    // ボールの検出（簡易版）
+    // ボールの検出（改善版）
     function detectBall(imageData) {
         let maxBrightness = 0;
         let ballX = 0, ballY = 0;
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateAndDisplaySpeed(currentPosition, currentTime) {
         if (lastBallPosition && lastBallTime && (currentTime - startTime) >= MEASURE_DELAY) {
             const distance = Math.sqrt(
-Math.pow(currentPosition.x - lastBallPosition.x, 2) +
+                Math.pow(currentPosition.x - lastBallPosition.x, 2) +
                 Math.pow(currentPosition.y - lastBallPosition.y, 2)
             );
             const time = (currentTime - lastBallTime) / 1000;
